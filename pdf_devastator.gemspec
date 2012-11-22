@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   EOF
 
   s.add_dependency 'nokogiri'
-  s.add_dependency 'terminal-table'
 
   s.files         = Dir['{lib}/**/*.rb']
   s.require_paths = ['lib']
