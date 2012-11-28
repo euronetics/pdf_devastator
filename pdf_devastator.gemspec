@@ -1,5 +1,5 @@
 # encoding: utf-8
-require_relative 'lib/pdf_devastator/version'
+require File.join(File.dirname(__FILE__), 'lib/pdf_devastator/version')
 
 Gem::Specification.new do |s|
   s.name        = 'pdf_devastator'
