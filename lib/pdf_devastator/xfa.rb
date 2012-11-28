@@ -3,7 +3,7 @@ require 'nokogiri'
 require 'java'
 require 'pdf_devastator/form'
 
-require_relative '../../vendor/iText-4.2.0'
+require File.join(File.dirname(__FILE__), '../../vendor/iText-4.2.0')
 
 java_import "com.lowagie.text.pdf.AcroFields"
 java_import "com.lowagie.text.pdf.PdfArray"
