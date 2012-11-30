@@ -44,8 +44,9 @@ module PDFDevastator
       forms.select { |f| f.name.eql? name }.first
     end
 
-    def fill_and_save(xml)
+    def fill_and_save(xml_string)
       datasets = @doc.xpath('//xfa:datasets', 'xfa' => 'http://www.xfa.org/schema/xfa-data/1.0/')
+      xml = Nokogiri::XML(xml_string)
       datasets.children.first.add_child(xml.root)
       @xfa.setDomDocument(@doc.to_java)
       @xfa.setChanged(true)
