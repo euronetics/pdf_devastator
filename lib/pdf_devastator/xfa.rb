@@ -31,7 +31,8 @@ module PDFDevastator
       @stamper = PdfStamper.new(@reader, @out_stream)
       afields = @stamper.getAcroFields
       @xfa = afields.getXfa
-      @doc = Nokogiri::XML::Document.wrap(@xfa.getDomDocument)
+      # Double-load to avoid a strange error with Nokogiri and Trinidad
+      @doc = Nokogiri::XML(Nokogiri::XML::Document.wrap(@xfa.getDomDocument).to_xml)
     end
 
     def forms
