@@ -19,6 +19,8 @@ java_import "com.lowagie.text.pdf.XfdfReader"
 
 module PDFDevastator
   class Xfa
+    XFA_DATASET_XML = "<xfa:datasets xmlns:xfa=\"http://www.xfa.org/schema/xfa-data/1.0/\"><xfa:data xfa:dataNode=\"dataGroup\"/></xfa:datasets>"
+
     attr_reader :doc
 
     def initialize(in_file, out_file = nil)
@@ -45,9 +47,10 @@ module PDFDevastator
     end
 
     def fill_and_save(xml_string)
-      datasets = @doc.xpath('//xfa:datasets', 'xfa' => 'http://www.xfa.org/schema/xfa-data/1.0/')
       xml = Nokogiri::XML(xml_string)
-      datasets.children.first.add_child(xml.root)
+      data_node = datasets().children.first
+      data_node.add_child(xml.root)
+
       @xfa.setDomDocument(@doc.to_java)
       @xfa.setChanged(true)
       @stamper.close
@@ -55,6 +58,25 @@ module PDFDevastator
 
     def stamped_pdf
       String.from_java_bytes(@out_stream.toByteArray)
+    end
+
+    private
+
+    def datasets
+      datasets = @doc.xpath('//xfa:datasets', 'xfa' => 'http://www.xfa.org/schema/xfa-data/1.0/')
+      if datasets.empty?
+        create_dataset_with_data_node
+      else
+        datasets
+      end
+    end
+
+    def create_dataset_with_data_node
+      new_dataset = Nokogiri::XML(XFA_DATASET_XML)
+      result = new_dataset.root
+      @doc.root.add_child(new_dataset.root)
+
+      @doc.xpath('//xfa:datasets', 'xfa' => 'http://www.xfa.org/schema/xfa-data/1.0/')
     end
   end
 end
